@@ -116,4 +116,24 @@ public class RoomReservationTest {
         verify(roomReservationRepository).isRoomReserved(roomCode);
         verify(roomReservationRepository, never()).save(any(RoomReservation.class));
     }
+
+    @Test
+    void createReservation_whenUserIsBlocked_shouldThrowException() {
+        // Arrange
+        String roomCode = "A101";
+        String email = "luis@espe.edu.ec";
+        int hours = 4;
+
+        when(userPolicyClient.isBlocked(email)).thenReturn(Boolean.TRUE);
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> roomReservationService.createReservation(roomCode, email, hours));
+
+        assertEquals("User is blocked by institutional policies", exception.getMessage());
+
+        verify(userPolicyClient).isBlocked(email);
+        verify(roomReservationRepository, never()).isRoomReserved(anyString());
+        verify(roomReservationRepository, never()).save(any(RoomReservation.class));
+    }
+
 }
