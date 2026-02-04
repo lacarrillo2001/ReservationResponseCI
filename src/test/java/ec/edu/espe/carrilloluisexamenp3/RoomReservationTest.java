@@ -126,7 +126,7 @@ public class RoomReservationTest {
 
         when(userPolicyClient.isBlocked(email)).thenReturn(Boolean.TRUE);
 
-        // Act & Assert
+        // Act & Asserttt
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> roomReservationService.createReservation(roomCode, email, hours));
 
         assertEquals("User is blocked by institutional policies", exception.getMessage());
